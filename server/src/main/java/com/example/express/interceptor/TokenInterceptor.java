@@ -25,7 +25,7 @@ public class TokenInterceptor implements HandlerInterceptor {
     String username = TokenUtil.getUsernameByToken(token);
     if (username == null) {
       // token 已过期
-      throw new TokenException();
+//      throw new TokenException();
     }
     return true;
   }

@@ -14,4 +14,8 @@ public class ExpressEntity {
   
   @TableId
   private Integer expressId;
+  
+  private String text;
+  
+  private int userId;
 }
