@@ -64,6 +64,7 @@
             <scope>provided</scope>
         </dependency>
     
+        <!--解决 jdk9 后模块缺失问题-->
         <!-- https://mvnrepository.com/artifact/javax.xml.bind/jaxb-api -->
         <dependency>
             <groupId>javax.xml.bind</groupId>
