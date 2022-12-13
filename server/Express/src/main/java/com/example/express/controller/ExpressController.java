@@ -24,7 +24,7 @@ public class ExpressController {
   
   @GetMapping("/all")
   public ResponseBean<List<ExpressEntity>> getAll() {
-    // 这里需要检查 token，是否是管理员
+    // 这里正常情况需要检查 token，是否是管理员，但检查操作交给了拦截器
     return ResponseBean.success(mExpressMapper.selectList(null));
   }
 }

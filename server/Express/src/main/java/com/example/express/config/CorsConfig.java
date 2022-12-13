@@ -5,7 +5,7 @@ import org.springframework.web.servlet.config.annotation.CorsRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
 /**
- * .
+ * 解决前后端分离导致的跨域问题
  *
  * @author 985892345
  * 2022/12/12 15:00

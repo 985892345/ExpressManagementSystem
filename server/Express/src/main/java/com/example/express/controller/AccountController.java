@@ -57,10 +57,9 @@ public class AccountController {
     UserSecretEntity secret = userSecretMapper.selectById(username);
     if (secret == null || !secret.getPassword().equals(pw)) {
       return ResponseBean.error(10010, "账号或者密码错误");
-    } else  {
+    } else {
       String token = TokenUtil.generateToken(username);
       String refreshToken = TokenUtil.generateRefreshToken(username);
-      System.out.println("refreshToken = " + refreshToken);
       // 插入 refreshToken 到数据库
       userTokenMapper.insert(new UserTokenEntity(username, refreshToken));
       // 根据 username 查询 UserEntity
