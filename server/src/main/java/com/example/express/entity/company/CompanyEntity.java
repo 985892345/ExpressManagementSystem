@@ -15,7 +15,9 @@ import lombok.Data;
 @AllArgsConstructor
 @TableName(value = "company")
 public class CompanyEntity {
-  
   @TableId
   private Integer companyId;
+  private String company;
+  private String address;
+  private String companyInf;
 }
