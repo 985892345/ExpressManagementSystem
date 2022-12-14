@@ -32,9 +32,9 @@ public class ArticleController {
 
     @GetMapping("/find")
     public ResponseBean<ArticleEntity> find(
-            @RequestParam int expressId
+            @RequestParam int articleId
     ) {
-        return ResponseBean.success(articleMapper.selectById(expressId));
+        return ResponseBean.success(articleMapper.selectById(articleId));
     }
 
 }

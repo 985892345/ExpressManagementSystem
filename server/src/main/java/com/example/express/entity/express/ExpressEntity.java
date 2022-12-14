@@ -4,6 +4,7 @@ import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
 import lombok.AllArgsConstructor;
 import lombok.Data;
+import org.springframework.lang.Nullable;
 
 import java.sql.Timestamp;
 
@@ -19,13 +20,22 @@ import java.sql.Timestamp;
 public class ExpressEntity {
   @TableId
   private Integer expressId;
+  @Nullable
   private Integer articleId;
+  @Nullable
   private double cost;
+  @Nullable
   private Timestamp time;
+  @Nullable
   private Integer sentId;
+  @Nullable
   private Integer receiveId;
+  @Nullable
   private Integer companyId;
+  @Nullable
   private String local;
+  @Nullable
   private String origin;
+  @Nullable
   private String dest;
 }

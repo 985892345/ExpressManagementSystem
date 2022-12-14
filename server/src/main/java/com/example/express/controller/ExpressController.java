@@ -8,10 +8,7 @@ import com.example.express.entity.user.UserEntity;
 import com.example.express.mapper.express.ExpressMapper;
 import com.example.express.mapper.user.UserMapper;
 import com.example.express.utils.TokenUtil;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -32,7 +29,8 @@ public class ExpressController {
     this.expressMapper = expressMapper;
     this.userMapper = userMapper;
   }
-  
+
+  //查找所有快递
   @GetMapping("/all")
   public ResponseBean<Page<ExpressEntity>> getAll(
           @RequestParam int current,
@@ -53,11 +51,12 @@ public class ExpressController {
     }
     //不是管理员
     QueryWrapper<ExpressEntity> queryWrapper2 = new QueryWrapper<>();
-    queryWrapper2.eq("user_id", user.getUserId());
+    queryWrapper2.eq("receive_id", user.getUserId());
     Page<ExpressEntity> result = expressMapper.selectPage(page,queryWrapper2);
     return ResponseBean.success(result);
   }
-  
+
+  //查找单个快递
   @GetMapping("/find")
   public ResponseBean<ExpressEntity> find(
     @RequestParam int expressId,
@@ -73,7 +72,7 @@ public class ExpressController {
     }
     //不是管理员
     QueryWrapper<ExpressEntity> queryWrapper2 = new QueryWrapper<>();
-    queryWrapper2.eq("user_id", user.getUserId());
+    queryWrapper2.eq("receive_id", user.getUserId());
     //queryWrapper2.eq("express_id", expressId);
     ExpressEntity expressEntity = expressMapper.selectById(expressId);
     //得到用户的全部快递
@@ -85,9 +84,11 @@ public class ExpressController {
     else return ResponseBean.success(null);
   }
 
- /* @GetMapping("/get")
+  @GetMapping("/get")
   //得到对应用户id的全部快递
   public ResponseBean<Page<ExpressEntity>> get(
+          @RequestParam int current,
+          @RequestParam int size,
           @RequestParam int userId,
           @RequestParam(value = "Authorization") String token
   ){
@@ -97,8 +98,73 @@ public class ExpressController {
     queryWrapper.eq("username", username);
     UserEntity user = userMapper.selectOne(queryWrapper);
     if(user.isAdmin()){
-      return
+      QueryWrapper<ExpressEntity> queryWrapper2 = new QueryWrapper<>();
+      queryWrapper2.eq("receive_id", userId);//得到与收件人id匹配的快递
+      Page<ExpressEntity> page = new Page<>(current,size);
+      Page<ExpressEntity> result = expressMapper.selectPage(page,queryWrapper2);
+      return ResponseBean.success(result);
     }
-  }*/
+    return ResponseBean.success(null);
+  }
+
+  //删除指定的数据
+  @PostMapping("/delete")
+  public ResponseBean<String> delete(
+          @RequestParam int expressId,
+          @RequestParam(value = "Authorization") String token
+  ){
+    String username = TokenUtil.getUsernameByToken(token);
+    //是否管理员
+    QueryWrapper<UserEntity> queryWrapper = new QueryWrapper<>();
+    queryWrapper.eq("username", username);
+    UserEntity user = userMapper.selectOne(queryWrapper);
+    if(user.isAdmin()){
+      QueryWrapper<ExpressEntity> queryWrapper2 = new QueryWrapper<>();
+      queryWrapper2.eq("express_id", expressId);
+      int delete = expressMapper.delete(queryWrapper2);
+      return ResponseBean.success("成功删除"+delete+"条数据");
+    }
+    return ResponseBean.success("删除失败");
+  }
+
+
+  //更新快递信息
+  @PostMapping("/update")
+  public ResponseBean<String> update(
+          @RequestBody ExpressEntity expressEntity,
+          @RequestParam int expressId,
+          @RequestParam(value = "Authorization") String token
+  ){
+    String username = TokenUtil.getUsernameByToken(token);
+    //是否管理员
+    QueryWrapper<UserEntity> queryWrapper = new QueryWrapper<>();
+    queryWrapper.eq("username", username);
+    UserEntity user = userMapper.selectOne(queryWrapper);
+    if(user.isAdmin()){
+      QueryWrapper<ExpressEntity> queryWrapper2 = new QueryWrapper<>();
+      queryWrapper2.eq("express_id", expressId);
+      expressMapper.update(expressEntity,queryWrapper2);//逗号前四传入的实体
+      return ResponseBean.success("修改成功");
+    }
+    return ResponseBean.success("修改失败");
+  }
+
+  //添加快递信息
+  @PostMapping("/add")
+  public ResponseBean<String> add(
+          @RequestBody ExpressEntity expressEntity,
+          @RequestParam(value = "Authorization") String token
+  ){
+    String username = TokenUtil.getUsernameByToken(token);
+    //是否管理员
+    QueryWrapper<UserEntity> queryWrapper = new QueryWrapper<>();
+    queryWrapper.eq("username", username);
+    UserEntity user = userMapper.selectOne(queryWrapper);
+    if(user.isAdmin()){
+      expressMapper.insert(expressEntity);//快递实体
+      return ResponseBean.success("增加信息成功");
+    }
+    return ResponseBean.success("增加信息成功");
+  }
 
 }
