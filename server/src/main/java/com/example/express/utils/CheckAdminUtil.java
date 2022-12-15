@@ -11,9 +11,7 @@ import lombok.AllArgsConstructor;
 @AllArgsConstructor
 //使用该工具检查用户是否拥有管理员权限
 public class CheckAdminUtil {
-    private String token;
-    private final UserMapper userMapper;
-    public UserEntity check(){
+    public static UserEntity check(String token,UserMapper userMapper){
         String username = TokenUtil.getUsernameByToken(token);
         QueryWrapper<UserEntity> queryWrapper = new QueryWrapper<>();
         queryWrapper.eq("username", username);

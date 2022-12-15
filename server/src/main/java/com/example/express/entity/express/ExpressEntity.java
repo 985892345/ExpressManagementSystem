@@ -27,8 +27,6 @@ public class ExpressEntity {
   @Nullable
   private double cost;
   @Nullable
-  private Timestamp time;
-  @Nullable
   private Integer sentId;
   @Nullable
   private Integer receiveId;
