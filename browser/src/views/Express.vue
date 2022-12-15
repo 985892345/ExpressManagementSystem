@@ -22,7 +22,7 @@
         <el-table-column prop="local" label="当前位置"></el-table-column>
         <el-table-column prop="origin" label="始发地"></el-table-column>
         <el-table-column prop="dest" label="目的地"></el-table-column>
-        <el-table-column label="操作" width="220" align="center"  :hidden="!accountStore.user.admin">
+        <el-table-column label="操作" width="220" align="center" :hidden="!accountStore.user.admin">
           <template #default="scope">
             <el-button text :icon="Edit" @click="handleEdit(scope.$index, scope.row)">
               修改
@@ -46,7 +46,7 @@
           :total="pageTotal"
           @current-change="handlePageChange"
         ></el-pagination>
-        <el-button type="primary" icon="Plus" @click="handleAdd">添加</el-button>
+        <el-button type="primary" icon="Plus" @click="handleAdd" :hidden="!accountStore.user.admin">添加</el-button>
       </div>
     </div>
 
@@ -158,6 +158,8 @@ const handleSearch = () => {
         query.current = 1
         tableData.value = [res.data.data]
         pageTotal.value = 1
+      } else if (res.data.code === 10020) {
+        ElMessage.info(res.data.info)
       } else {
         ElMessage.error("获取快递信息失败：" + res.data.info);
       }
@@ -199,13 +201,13 @@ const handleEdit = (index, row) => {
 }
 const saveEdit = () => {
   updateExpress(form).then(res => {
-    if (form.data.code === 10000) {
+    if (res.data.code === 10000) {
       ElMessage.success(`修改第 ${idx + 1} 行成功`);
       if (form.local !== '') {
         tableData.value[idx].local = form.local
       }
       if (form.dest !== '') {
-        tableData.value[idx].local = form.dest
+        tableData.value[idx].dest = form.dest
       }
       if (form.cost !== '') {
         tableData.value[idx].cost = form.cost

@@ -129,10 +129,10 @@ export const findExpress = (expressId) => {
 export const deleteExpress = (expressId) => {
   return request({
     url: '/express/delete',
-    method: "get",
-    params: {
+    method: "post",
+    data: stringify({
       expressId: expressId
-    }
+    })
   })
 }
 
