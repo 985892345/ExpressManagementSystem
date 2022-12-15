@@ -63,6 +63,9 @@ public class ExpressController {
     @RequestHeader(value = "Authorization") String token
   ) {
     ExpressEntity expressEntity = expressMapper.selectById(expressId);
+    if (expressEntity == null) {
+      return ResponseBean.error(10020, "未找到该快递");
+    }
     UserEntity user = CheckAdminUtil.check(token, userMapper);//为检查是否管理员做准备
     if (user.isAdmin()) {
       return ResponseBean.success(expressEntity);
