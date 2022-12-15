@@ -74,7 +74,7 @@ public class ExpressController {
     if(expressEntities.contains(expressEntity)){
       return ResponseBean.success(expressMapper.selectById(expressId));
     }
-    else return ResponseBean.success(null);
+    else return ResponseBean.error(10010,"权限不足");
   }
 
   @GetMapping("/get")
@@ -93,7 +93,7 @@ public class ExpressController {
       Page<ExpressEntity> result = expressMapper.selectPage(page,queryWrapper2);
       return ResponseBean.success(result);
     }
-    return ResponseBean.success(null);
+    return ResponseBean.error(10010,"权限不足");
   }
 
   //删除指定的数据
@@ -109,7 +109,7 @@ public class ExpressController {
       int delete = expressMapper.delete(queryWrapper2);
       return ResponseBean.success("成功删除"+delete+"条数据");
     }
-    return ResponseBean.success("权限不足，删除失败");
+    return ResponseBean.error(10010,"权限不足，删除失败");
   }
 
 
@@ -125,11 +125,11 @@ public class ExpressController {
       queryWrapper2.eq("express_id", expressEntity.getExpressId());
       int update = expressMapper.update(expressEntity, queryWrapper2);//逗号前四传入的实体
       if(update==0){
-        return ResponseBean.success("该数据不存在");
+        return ResponseBean.error(10020,"该数据不存在");
       }
       return ResponseBean.success("修改成功");
     }
-    return ResponseBean.success("权限不足，修改失败");
+    return ResponseBean.error(10010,"权限不足，修改失败");
   }
 
   //添加快递信息
@@ -142,12 +142,12 @@ public class ExpressController {
     if(user.isAdmin()){
       ExpressEntity expressEntity1 = expressMapper.selectById(expressEntity.getExpressId());
       if(expressEntity1 != null){
-        return ResponseBean.success("该条记录已存在");
+        return ResponseBean.error(10030,"该条记录已存在");
       }
       expressMapper.insert(expressEntity);//快递实体
       return ResponseBean.success("增加信息成功");
     }
-    return ResponseBean.success("权限不足，增加信息失败");
+    return ResponseBean.error(10010,"权限不足，增加信息失败");
   }
 
 }
