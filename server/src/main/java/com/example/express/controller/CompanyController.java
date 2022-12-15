@@ -1,5 +1,6 @@
 package com.example.express.controller;
 
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.example.express.bean.ResponseBean;
 import com.example.express.entity.company.CompanyEntity;
@@ -36,9 +37,17 @@ public class CompanyController {
   }
   
   @GetMapping("find")
-  public ResponseBean<CompanyEntity> find(
-    @RequestParam int companyId
+  public ResponseBean<Page<CompanyEntity>> find(
+    @RequestParam String key,
+    @RequestParam int current,
+    @RequestParam int size
   ) {
-    return ResponseBean.success(companyMapper.selectById(companyId));
+    Page<CompanyEntity> page = new Page<>(current, size);
+    QueryWrapper<CompanyEntity> queryWrapper = new QueryWrapper<>();
+    queryWrapper.like("company_id", key)
+      .or().like("company", key)
+      .or().like("address", key)
+      .or().like("company_inf", key);
+    return ResponseBean.success(companyMapper.selectPage(page, queryWrapper));
   }
 }

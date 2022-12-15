@@ -9,7 +9,7 @@
     </div>
     <div class="container">
       <div class="handle-box" style="padding-bottom: 10px">
-        <el-input v-model="searchExpressId" placeholder="查找快递id(精确查询)" style="width: 200px; margin-right: 20px"></el-input>
+        <el-input v-model="searchId" placeholder="查找快递id(精确查询)" style="width: 200px; margin-right: 20px"></el-input>
         <el-button type="primary" icon="Search" @click="handleSearch">查找</el-button>
       </div>
       <el-table :data="tableData" border class="table" ref="multipleTable" header-cell-class-name="table-header">
@@ -73,7 +73,7 @@
 
     <!-- 编辑弹出框 -->
     <el-dialog title="添加" v-model="addVisible" width="30%">
-      <el-form label-width="70px">
+      <el-form label-width="100px">
         <el-form-item label="商品id">
           <el-input v-model="form.articleId"></el-input>
         </el-form-item>
@@ -118,7 +118,7 @@ import {useAccountStore} from "@/store/account";
 
 const accountStore = useAccountStore()
 
-const searchExpressId = ref()
+const searchId = ref()
 
 const tableData = ref([]);
 const query = reactive({
@@ -128,7 +128,7 @@ const query = reactive({
 const pageTotal = ref(0);
 // 分页导航
 const handlePageChange = (val) => {
-  if (!searchExpressId.value) {
+  if (!searchId.value) {
     query.current = val;
     getData();
   }
@@ -152,8 +152,8 @@ const getData = () => {
 getData();
 
 const handleSearch = () => {
-  if (searchExpressId.value) {
-    findExpress(searchExpressId.value).then(res => {
+  if (searchId.value) {
+    findExpress(searchId.value).then(res => {
       if (res.data.code === 10000) {
         query.current = 1
         tableData.value = [res.data.data]
@@ -251,6 +251,7 @@ const saveAdd = () => {
       ElMessage.success("添加成功")
       query.current = 1
       getData()
+      addVisible.value = false
     } else {
       ElMessage.error("添加失败：" + res.data.info)
     }

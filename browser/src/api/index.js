@@ -102,26 +102,6 @@ export const findUser = (userId) => {
   })
 }
 
-// 删除快递
-export const deleteExpress = (expressId) => {
-  return request({
-    url: '/express/delete',
-    method: "get",
-    params: {
-      expressId: expressId
-    }
-  })
-}
-
-// 更新快递
-export const updateExpress = (express) => {
-  return request({
-    url: '/express/update',
-    method: 'post',
-    data: express
-  })
-}
-
 // 得到所有快递
 export const getAllExpress = (current, size) => {
   return request({
@@ -145,13 +125,81 @@ export const findExpress = (expressId) => {
   })
 }
 
+// 删除快递
+export const deleteExpress = (expressId) => {
+  return request({
+    url: '/express/delete',
+    method: "get",
+    params: {
+      expressId: expressId
+    }
+  })
+}
+
+// 更新快递
+export const updateExpress = (express) => {
+  return request({
+    url: '/express/update',
+    method: 'post',
+    data: express
+  })
+}
+
 // 添加快递
 export const addExpress = (express) => {
   return request({
-    url: '/express/find',
+    url: '/express/add',
+    method: 'post',
+    data: express
+  })
+}
+
+// 得到所有公司信息
+export const getAllCompany = (current, size) => {
+  return request({
+    url: '/company/all',
     method: 'get',
     params: {
-      express: express
+      current: current,
+      size: size
+    }
+  })
+}
+
+// 查找公司信息
+export const findCompany = (key, current, size) => {
+  return request({
+    url: '/company/find',
+    method: 'get',
+    params: {
+      key: key,
+      current: current,
+      size: size
+    }
+  })
+}
+
+// 得到所有商品信息
+export const getAllArticle = (current, size) => {
+  return request({
+    url: '/article/all',
+    method: 'get',
+    params: {
+      current: current,
+      size: size
+    }
+  })
+}
+
+// 查找商品信息
+export const findArticle = (key, current, size) => {
+  return request({
+    url: '/article/find',
+    method: 'get',
+    params: {
+      key: key,
+      current: current,
+      size: size
     }
   })
 }

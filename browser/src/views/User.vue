@@ -9,7 +9,7 @@
     </div>
     <div class="container">
       <div class="handle-box" style="padding-bottom: 10px">
-        <el-input v-model="searchUserId" placeholder="查找用户id(精确查询)" style="width: 200px; margin-right: 20px"></el-input>
+        <el-input v-model="searchId" placeholder="查找用户id(精确查询)" style="width: 200px; margin-right: 20px"></el-input>
         <el-button type="primary" icon="Search" @click="handleSearch">查找</el-button>
       </div>
       <el-table :data="tableData" border class="table" ref="multipleTable" header-cell-class-name="table-header">
@@ -77,19 +77,17 @@ import {Edit} from "@element-plus/icons-vue";
 import {updateUser, getUser, findUser} from "@/api";
 import {ElMessage} from "element-plus";
 
-const searchUserId = ref()
+const searchId = ref()
 
 const tableData = ref([]);
 const query = reactive({
-  sex: '',
-  name: '',
   current: 1,
   size: 10
 });
 const pageTotal = ref(0);
 // 分页导航
 const handlePageChange = (val) => {
-  if (!searchUserId.value) {
+  if (!searchId.value) {
     query.current = val;
     getData();
   }
@@ -113,8 +111,8 @@ const getData = () => {
 getData();
 
 const handleSearch = () => {
-  if (searchUserId.value) {
-    findUser(searchUserId.value).then(res => {
+  if (searchId.value) {
+    findUser(searchId.value).then(res => {
       if (res.data.code === 10000) {
         query.current = 1
         tableData.value = [res.data.data]

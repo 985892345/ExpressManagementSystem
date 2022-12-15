@@ -3,20 +3,20 @@
     <div class="crumbs">
       <el-breadcrumb separator="/">
         <el-breadcrumb-item>
-          <i class="el-icon-lx-cascades"></i> 公司信息查看
+          <i class="el-icon-lx-cascades"></i> 商品信息查看
         </el-breadcrumb-item>
       </el-breadcrumb>
     </div>
     <div class="container">
       <div class="handle-box" style="padding-bottom: 10px">
-        <el-input v-model="searchId" placeholder="查找公司" style="width: 200px; margin-right: 20px"></el-input>
+        <el-input v-model="searchId" placeholder="查找商品" style="width: 200px; margin-right: 20px"></el-input>
         <el-button type="primary" icon="Search" @click="handleSearch">查找</el-button>
       </div>
       <el-table :data="tableData" border class="table" ref="multipleTable" header-cell-class-name="table-header">
-        <el-table-column prop="companyId" label="ID"></el-table-column>
-        <el-table-column prop="company" label="公司名"></el-table-column>
-        <el-table-column prop="address" label="地址"></el-table-column>
-        <el-table-column prop="companyInf" label="简介"></el-table-column>
+        <el-table-column prop="articleId" label="ID"></el-table-column>
+        <el-table-column prop="article" label="商品名"></el-table-column>
+        <el-table-column prop="cost" label="价格"></el-table-column>
+        <el-table-column prop="articleInf" label="介绍"></el-table-column>
       </el-table>
       <div class="pagination">
         <el-pagination
@@ -34,7 +34,7 @@
 
 <script setup>
 import {reactive, ref} from "vue";
-import {findCompany, getAllCompany} from "@/api";
+import {findArticle, getAllArticle} from "@/api";
 import {ElMessage} from "element-plus";
 
 const searchId = ref()
@@ -53,7 +53,7 @@ const handlePageChange = (val) => {
 
 // 获取表格数据
 const getData = () => {
-  getAllCompany(query.current, query.size).then(res => {
+  getAllArticle(query.current, query.size).then(res => {
     if (res.data.code === 10000) {
       tableData.value = res.data.data.records
       pageTotal.value = res.data.data.total
@@ -70,7 +70,7 @@ getData();
 
 const handleSearch = () => {
   if (searchId.value) {
-    findCompany(searchId.value, 1, 10).then(res => {
+    findArticle(searchId.value, 1, 10).then(res => {
       if (res.data.code === 10000) {
         query.current = 1
         tableData.value = res.data.data.records
@@ -81,11 +81,11 @@ const handleSearch = () => {
           pageTotal.value = 10
         }
       } else {
-        ElMessage.error("获取公司信息失败：" + res.data.info);
+        ElMessage.error("获取商品信息失败：" + res.data.info);
       }
     }).catch(err => {
       console.error(err)
-      ElMessage.error("获取公司信息失败：" + err.message);
+      ElMessage.error("获取商品信息失败：" + err.message);
     })
   } else {
     getData()

@@ -1,8 +1,10 @@
 package com.example.express.controller;
 
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.example.express.bean.ResponseBean;
 import com.example.express.entity.article.ArticleEntity;
+import com.example.express.entity.company.CompanyEntity;
 import com.example.express.entity.express.ExpressEntity;
 import com.example.express.mapper.article.ArticleMapper;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -31,10 +33,17 @@ public class ArticleController {
     }
 
     @GetMapping("/find")
-    public ResponseBean<ArticleEntity> find(
-            @RequestParam int articleId
+    public ResponseBean<Page<ArticleEntity>> find(
+        @RequestParam String key,
+        @RequestParam int current,
+        @RequestParam int size
     ) {
-        return ResponseBean.success(articleMapper.selectById(articleId));
+        Page<ArticleEntity> page = new Page<>(current, size);
+        QueryWrapper<ArticleEntity> queryWrapper = new QueryWrapper<>();
+        queryWrapper.like("article_id", key)
+          .or().like("article", key)
+          .or().like("article_inf", key);
+        return ResponseBean.success(articleMapper.selectPage(page, queryWrapper));
     }
 
 }
