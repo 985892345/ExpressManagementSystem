@@ -21,11 +21,15 @@ public class TokenInterceptor implements HandlerInterceptor {
     @NotNull HttpServletResponse response,
     @NotNull Object handler
   ) {
+    // 前端 axios 对于复杂请求会先发送 OPTIONS，此时没有 header
+    if ("OPTIONS".equals(request.getMethod())) {
+      return true;
+    }
     String token = request.getHeader("Authorization");
     String username = TokenUtil.getUsernameByToken(token);
     if (username == null) {
       // token 已过期
-//      throw new TokenException();
+      throw new TokenException();
     }
     return true;
   }

@@ -11,10 +11,7 @@ import com.example.express.mapper.user.UserMapper;
 import com.example.express.mapper.user.UserSecretMapper;
 import com.example.express.mapper.user.UserTokenMapper;
 import com.example.express.utils.TokenUtil;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.nio.charset.StandardCharsets;
 import java.security.MessageDigest;
@@ -60,6 +57,7 @@ public class AccountController {
     } else {
       String token = TokenUtil.generateToken(username);
       String refreshToken = TokenUtil.generateRefreshToken(username);
+      userTokenMapper.deleteById(username);
       // 插入 refreshToken 到数据库
       userTokenMapper.insert(new UserTokenEntity(username, refreshToken));
       // 根据 username 查询 UserEntity
@@ -79,13 +77,14 @@ public class AccountController {
   @PostMapping("/register")
   public ResponseBean<String> register(
     @RequestParam String username,
-    @RequestParam String password
+    @RequestParam String password,
+    @RequestParam long phone
   ) {
     boolean isExist = userSecretMapper.selectById(username) != null;
     if (isExist) {
       return ResponseBean.error(10010, "该用户名已被注册");
     } else {
-      userMapper.insert(new UserEntity(0, username, null, null, null, false));
+      userMapper.insert(new UserEntity(0, username, null, phone, null, false));
       // 采用 SHA 算法加密密码，服务器上不保存明文密码
       String pw = sha(password);
       userSecretMapper.insert(new UserSecretEntity(username, pw));
@@ -114,9 +113,24 @@ public class AccountController {
       String token = TokenUtil.generateToken(username);
       String newRefreshToken = TokenUtil.generateRefreshToken(username);
       // 插入新的 refreshToken 到数据库
-      userTokenMapper.insert(new UserTokenEntity(username, newRefreshToken));
+      userTokenMapper.updateById(new UserTokenEntity(username, newRefreshToken));
       return ResponseBean.success(new TokenBean(token, newRefreshToken));
     }
+  }
+  
+  @GetMapping("/self")
+  public ResponseBean<UserEntity> getSelf(
+    @RequestHeader(value = "Authorization") String token
+  ) {
+    String username = TokenUtil.getUsernameByToken(token);
+    if (username == null) {
+      return ResponseBean.errorOfToken();
+    }
+    // 根据 username 查询 UserEntity
+    QueryWrapper<UserEntity> queryWrapper = new QueryWrapper<>();
+    queryWrapper.eq("username", username);
+    UserEntity user = userMapper.selectOne(queryWrapper);
+    return ResponseBean.success(user);
   }
   
   private static String sha(String inStr) {

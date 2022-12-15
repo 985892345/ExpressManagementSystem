@@ -1,12 +1,13 @@
 package com.example.express.controller;
 
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.example.express.bean.ResponseBean;
 import com.example.express.entity.express.ExpressEntity;
 import com.example.express.mapper.express.ExpressMapper;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import com.example.express.utils.TokenUtil;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.Collections;
 import java.util.List;
 
 /**
@@ -32,9 +33,10 @@ public class ExpressController {
   }
   
   @GetMapping("/find")
-  public ResponseBean<ExpressEntity> find(
+  public ResponseBean<Page<ExpressEntity>> find(
+    @RequestHeader(value = "Authorization") String token,
     @RequestParam int expressId
   ) {
-    return ResponseBean.success(expressMapper.selectById(expressId));
+    return ResponseBean.success(null);
   }
 }

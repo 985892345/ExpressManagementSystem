@@ -8,12 +8,13 @@
     "preview": "vite preview"
   },
   "dependencies": {
+    "@element-plus/icons-vue": "^2.0.10",
     "axios": "^1.2.1",
     "element-plus": "^2.2.26",
-    "mockjs": "^1.1.0",
+    "pinia": "^2.0.28",
+    "qs": "^6.11.0",
     "vue": "^3.2.45",
-    "vue-router": "^4.1.6",
-    "vuex": "^4.0.2"
+    "vue-router": "^4.1.6"
   },
   "devDependencies": {
     "@vitejs/plugin-vue": "^3.2.0",

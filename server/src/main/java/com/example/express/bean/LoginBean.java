@@ -14,5 +14,5 @@ import lombok.Data;
 @AllArgsConstructor
 public class LoginBean {
   private UserEntity user;
-  private TokenBean token;
+  private TokenBean auth;
 }

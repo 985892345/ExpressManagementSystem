@@ -12,9 +12,11 @@ public class GlobalException extends RuntimeException {
   
   public GlobalException(int code, String message) {
     super(message);
+    this.code = code;
   }
   
   public GlobalException(int code, String message, Throwable cause) {
     super(message, cause);
+    this.code = code;
   }
 }

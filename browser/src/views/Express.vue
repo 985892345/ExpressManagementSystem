@@ -1,0 +1,159 @@
+<template>
+  <div>
+    <div class="crumbs">
+      <el-breadcrumb separator="/">
+        <el-breadcrumb-item>
+          <i class="el-icon-lx-cascades"></i> 用户信息查看
+        </el-breadcrumb-item>
+      </el-breadcrumb>
+    </div>
+    <div class="container">
+      <el-table :data="tableData" border class="table" ref="multipleTable" header-cell-class-name="table-header">
+        <el-table-column prop="userId" label="用户id"></el-table-column>
+        <el-table-column prop="username" label="用户名"></el-table-column>
+        <el-table-column prop="address" label="地址"></el-table-column>
+        <el-table-column prop="phone" label="手机号"></el-table-column>
+        <el-table-column prop="sex" label="性别"></el-table-column>
+        <el-table-column prop="admin" label="是否管理员"></el-table-column>
+        <el-table-column label="操作" width="220" align="center">
+          <template #default="scope">
+            <el-button text :icon="Edit" @click="handleEdit(scope.$index, scope.row)">
+              修改用户信息
+            </el-button>
+          </template>
+        </el-table-column>
+      </el-table>
+      <div class="pagination">
+        <el-pagination
+          background
+          layout="total, prev, pager, next"
+          :current-page="query.current"
+          :page-size="query.size"
+          :total="pageTotal"
+          @current-change="handlePageChange"
+        ></el-pagination>
+      </div>
+    </div>
+
+    <!-- 编辑弹出框 -->
+    <el-dialog title="编辑" v-model="editVisible" width="30%">
+      <el-form label-width="70px">
+        <el-form-item label="地址">
+          <el-input v-model="form.address"></el-input>
+        </el-form-item>
+        <el-form-item label="电话">
+          <el-input v-model="form.phone" type="number"></el-input>
+        </el-form-item>
+        <el-form-item label="性别">
+          <el-radio-group v-model="form.sex">
+            <el-radio label="男">男</el-radio>
+            <el-radio label="女">女</el-radio>
+          </el-radio-group>
+        </el-form-item>
+        <el-form-item label="管理员">
+          <el-radio-group v-model="form.admin">
+            <el-radio label="1">true</el-radio>
+            <el-radio label="0">false</el-radio>
+          </el-radio-group>
+        </el-form-item>
+      </el-form>
+      <template #footer>
+				<span class="dialog-footer">
+					<el-button @click="editVisible = false">取 消</el-button>
+					<el-button type="primary" @click="saveEdit">确 定</el-button>
+				</span>
+      </template>
+    </el-dialog>
+  </div>
+</template>
+
+<script setup>
+import {reactive, ref} from "vue";
+import {Edit} from "@element-plus/icons-vue";
+import {changeUser, getUser} from "@/api";
+import {ElMessage} from "element-plus";
+
+const tableData = ref([]);
+const query = reactive({
+  sex: '',
+  name: '',
+  current: 1,
+  size: 10
+});
+const pageTotal = ref(0);
+// 分页导航
+const handlePageChange = (val) => {
+  query.current = val;
+  getData();
+};
+
+// 获取表格数据
+const getData = () => {
+  getUser(query.current, query.size).then(res => {
+    if (res.data.code === 10000) {
+      tableData.value = res.data.data.records
+      pageTotal.value = res.data.data.total
+
+    } else {
+      ElMessage.error(res.data.info);
+    }
+  }).catch(err => {
+    console.error(err)
+    ElMessage.error(err.message);
+  })
+}
+
+getData();
+
+// 表格编辑时弹窗和保存
+const editVisible = ref(false)
+let form = reactive({
+  userId: 0,
+  address: '',
+  phone: '',
+  sex: '',
+  admin: '',
+})
+let idx = -1;
+const handleEdit = (index, row) => {
+  idx = index;
+  form.userId = row.userId
+  form.address = row.address
+  form.phone = row.phone
+  form.sex = row.sex
+  form.admin = row.admin
+  editVisible.value = true
+}
+const saveEdit = () => {
+  if (form.phone !== '' && form.phone.length !== 11) {
+    ElMessage.warning("电话号码不正确!")
+  } else {
+    changeUser(form.userId, form.address, form.phone,form.sex, form.admin).then(res => {
+      if (res.data.code === 10000) {
+        ElMessage.success(`修改第 ${idx + 1} 行成功`);
+        if (form.address !== "") {
+          tableData.value[idx].address = form.address
+        }
+        if (form.phone !== "") {
+          tableData.value[idx].phone = form.phone
+        }
+        if (form.sex !== "") {
+          tableData.value[idx].avatar = form.avatar
+        }
+        if (form.admin !== "") {
+          tableData.value[idx].admin = form.admin
+        }
+      } else {
+        ElMessage.success(`修改失败` + res.data.info)
+      }
+      editVisible.value = false;
+    }).catch(err => {
+      ElMessage.error(err.message)
+    })
+  }
+}
+</script>
+
+<style scoped>
+
+</style>

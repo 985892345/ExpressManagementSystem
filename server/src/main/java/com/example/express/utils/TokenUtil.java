@@ -20,7 +20,7 @@ public class TokenUtil {
   /**
    * token 过期时间
    */
-  private static final long TOKEN_EXPIRE_TIME = TimeUnit.MILLISECONDS.convert(10, TimeUnit.MINUTES);
+  private static final long TOKEN_EXPIRE_TIME = TimeUnit.MILLISECONDS.convert(1000, TimeUnit.MINUTES);
   
   /**
    * refresh_token 过期时间

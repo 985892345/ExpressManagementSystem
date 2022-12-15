@@ -25,7 +25,7 @@ public class CompanyController {
   }
   
   @GetMapping("/all")
-  public ResponseBean<List<CompanyEntity>> getALl() {
+  public ResponseBean<List<CompanyEntity>> getAll() {
     return ResponseBean.success(companyMapper.selectList(null));
   }
 }
