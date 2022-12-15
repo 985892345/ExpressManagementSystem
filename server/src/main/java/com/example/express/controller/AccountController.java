@@ -1,20 +1,21 @@
 package com.example.express.controller;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.example.express.bean.LoginBean;
 import com.example.express.bean.ResponseBean;
 import com.example.express.bean.TokenBean;
+import com.example.express.entity.express.ExpressEntity;
 import com.example.express.entity.user.UserEntity;
 import com.example.express.entity.user.UserSecretEntity;
 import com.example.express.entity.user.UserTokenEntity;
 import com.example.express.mapper.user.UserMapper;
 import com.example.express.mapper.user.UserSecretMapper;
 import com.example.express.mapper.user.UserTokenMapper;
+import com.example.express.utils.CheckAdminUtil;
 import com.example.express.utils.TokenUtil;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.http.StreamingHttpOutputMessage;
+import org.springframework.web.bind.annotation.*;
 
 import java.nio.charset.StandardCharsets;
 import java.security.MessageDigest;
@@ -118,6 +119,35 @@ public class AccountController {
       userTokenMapper.insert(new UserTokenEntity(username, newRefreshToken));
       return ResponseBean.success(new TokenBean(token, newRefreshToken));
     }
+  }
+
+  @GetMapping("/all")
+  public ResponseBean<Page<UserEntity>> getall(
+          @RequestParam int current,
+          @RequestParam int size,
+          @RequestHeader(value = "Authorization") String token
+  ){
+    UserEntity user = new CheckAdminUtil(token,userMapper).check();//为检查是否管理员做准备
+    //如果是管理员
+    Page<UserEntity> page = new Page<>(current,size);
+    if(user.isAdmin()){
+      Page<UserEntity> result = userMapper.selectPage(page,null);
+      return ResponseBean.success(result);
+    }
+    return ResponseBean.success(null);
+  }
+
+  @GetMapping("/find")
+  public ResponseBean<UserEntity> find(
+          @RequestParam int userId,
+          @RequestHeader(value = "Authorization") String token
+  ){
+    UserEntity user = new CheckAdminUtil(token,userMapper).check();//为检查是否管理员做准备
+    //如果是管理员
+    if(user.isAdmin()){
+      return ResponseBean.success(userMapper.selectById(userId));
+    }
+    return ResponseBean.success(null);
   }
   
   private static String sha(String inStr) {

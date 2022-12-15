@@ -7,6 +7,7 @@ import com.example.express.entity.express.ExpressEntity;
 import com.example.express.entity.user.UserEntity;
 import com.example.express.mapper.express.ExpressMapper;
 import com.example.express.mapper.user.UserMapper;
+import com.example.express.utils.CheckAdminUtil;
 import com.example.express.utils.TokenUtil;
 import org.springframework.web.bind.annotation.*;
 
@@ -39,10 +40,7 @@ public class ExpressController {
   ) {
     // 这里正常情况需要检查 token，是否是管理员，但检查操作交给了拦截器
     //检查是否为管理员
-    String username = TokenUtil.getUsernameByToken(token);
-    QueryWrapper<UserEntity> queryWrapper = new QueryWrapper<>();
-    queryWrapper.eq("username", username);
-    UserEntity user = userMapper.selectOne(queryWrapper);
+    UserEntity user = new CheckAdminUtil(token,userMapper).check();
     //如果是管理员
     Page<ExpressEntity> page = new Page<>(current,size);
     if(user.isAdmin()){
@@ -62,11 +60,7 @@ public class ExpressController {
     @RequestParam int expressId,
     @RequestHeader(value = "Authorization") String token
   ) {
-    String username = TokenUtil.getUsernameByToken(token);
-    //是否管理员
-    QueryWrapper<UserEntity> queryWrapper = new QueryWrapper<>();
-    queryWrapper.eq("username", username);
-    UserEntity user = userMapper.selectOne(queryWrapper);
+    UserEntity user = new CheckAdminUtil(token,userMapper).check();//为检查是否管理员做准备
     if (user.isAdmin()){
       return ResponseBean.success(expressMapper.selectById(expressId));
     }
@@ -92,11 +86,7 @@ public class ExpressController {
           @RequestParam int userId,
           @RequestHeader(value = "Authorization") String token
   ){
-    String username = TokenUtil.getUsernameByToken(token);
-    //是否管理员
-    QueryWrapper<UserEntity> queryWrapper = new QueryWrapper<>();
-    queryWrapper.eq("username", username);
-    UserEntity user = userMapper.selectOne(queryWrapper);
+    UserEntity user = new CheckAdminUtil(token,userMapper).check();//为检查是否管理员做准备
     if(user.isAdmin()){
       QueryWrapper<ExpressEntity> queryWrapper2 = new QueryWrapper<>();
       queryWrapper2.eq("receive_id", userId);//得到与收件人id匹配的快递
@@ -113,18 +103,14 @@ public class ExpressController {
           @RequestParam int expressId,
           @RequestHeader(value = "Authorization") String token
   ){
-    String username = TokenUtil.getUsernameByToken(token);
-    //是否管理员
-    QueryWrapper<UserEntity> queryWrapper = new QueryWrapper<>();
-    queryWrapper.eq("username", username);
-    UserEntity user = userMapper.selectOne(queryWrapper);
+    UserEntity user = new CheckAdminUtil(token,userMapper).check();//为检查是否管理员做准备
     if(user.isAdmin()){
       QueryWrapper<ExpressEntity> queryWrapper2 = new QueryWrapper<>();
       queryWrapper2.eq("express_id", expressId);
       int delete = expressMapper.delete(queryWrapper2);
       return ResponseBean.success("成功删除"+delete+"条数据");
     }
-    return ResponseBean.success("删除失败");
+    return ResponseBean.success("权限不足，删除失败");
   }
 
 
@@ -134,11 +120,7 @@ public class ExpressController {
           @RequestBody ExpressEntity expressEntity,
           @RequestHeader(value = "Authorization") String token
   ){
-    String username = TokenUtil.getUsernameByToken(token);
-    //是否管理员
-    QueryWrapper<UserEntity> queryWrapper = new QueryWrapper<>();
-    queryWrapper.eq("username", username);
-    UserEntity user = userMapper.selectOne(queryWrapper);
+    UserEntity user = new CheckAdminUtil(token,userMapper).check();//为检查是否管理员做准备
     if(user.isAdmin()){
       QueryWrapper<ExpressEntity> queryWrapper2 = new QueryWrapper<>();
       queryWrapper2.eq("express_id", expressEntity.getExpressId());
@@ -148,7 +130,7 @@ public class ExpressController {
       }
       return ResponseBean.success("修改成功");
     }
-    return ResponseBean.success("修改失败");
+    return ResponseBean.success("权限不足，修改失败");
   }
 
   //添加快递信息
@@ -157,11 +139,7 @@ public class ExpressController {
           @RequestBody ExpressEntity expressEntity,
           @RequestHeader(value = "Authorization") String token
   ){
-    String username = TokenUtil.getUsernameByToken(token);
-    //是否管理员
-    QueryWrapper<UserEntity> queryWrapper = new QueryWrapper<>();
-    queryWrapper.eq("username", username);
-    UserEntity user = userMapper.selectOne(queryWrapper);
+    UserEntity user = new CheckAdminUtil(token,userMapper).check();//为检查是否管理员做准备
     if(user.isAdmin()){
       ExpressEntity expressEntity1 = expressMapper.selectById(expressEntity.getExpressId());
       if(expressEntity1 != null){
@@ -170,7 +148,7 @@ public class ExpressController {
       expressMapper.insert(expressEntity);//快递实体
       return ResponseBean.success("增加信息成功");
     }
-    return ResponseBean.success("增加信息成功");
+    return ResponseBean.success("权限不足，增加信息失败");
   }
 
 }
