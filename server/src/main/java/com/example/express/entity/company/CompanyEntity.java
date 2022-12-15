@@ -4,6 +4,7 @@ import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
 import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 /**
  * .
@@ -12,6 +13,7 @@ import lombok.Data;
  * 2022/12/13 19:40
  */
 @Data
+@NoArgsConstructor
 @AllArgsConstructor
 @TableName(value = "company")
 public class CompanyEntity {

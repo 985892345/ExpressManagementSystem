@@ -35,7 +35,7 @@ public class ExpressController {
   public ResponseBean<Page<ExpressEntity>> getAll(
           @RequestParam int current,
           @RequestParam int size,
-          @RequestParam(value = "Authorization") String token
+          @RequestHeader(value = "Authorization") String token
   ) {
     // 这里正常情况需要检查 token，是否是管理员，但检查操作交给了拦截器
     //检查是否为管理员
@@ -60,7 +60,7 @@ public class ExpressController {
   @GetMapping("/find")
   public ResponseBean<ExpressEntity> find(
     @RequestParam int expressId,
-    @RequestParam(value = "Authorization") String token
+    @RequestHeader(value = "Authorization") String token
   ) {
     String username = TokenUtil.getUsernameByToken(token);
     //是否管理员
@@ -90,7 +90,7 @@ public class ExpressController {
           @RequestParam int current,
           @RequestParam int size,
           @RequestParam int userId,
-          @RequestParam(value = "Authorization") String token
+          @RequestHeader(value = "Authorization") String token
   ){
     String username = TokenUtil.getUsernameByToken(token);
     //是否管理员
@@ -111,7 +111,7 @@ public class ExpressController {
   @PostMapping("/delete")
   public ResponseBean<String> delete(
           @RequestParam int expressId,
-          @RequestParam(value = "Authorization") String token
+          @RequestHeader(value = "Authorization") String token
   ){
     String username = TokenUtil.getUsernameByToken(token);
     //是否管理员
@@ -132,8 +132,7 @@ public class ExpressController {
   @PostMapping("/update")
   public ResponseBean<String> update(
           @RequestBody ExpressEntity expressEntity,
-          @RequestParam int expressId,
-          @RequestParam(value = "Authorization") String token
+          @RequestHeader(value = "Authorization") String token
   ){
     String username = TokenUtil.getUsernameByToken(token);
     //是否管理员
@@ -142,8 +141,11 @@ public class ExpressController {
     UserEntity user = userMapper.selectOne(queryWrapper);
     if(user.isAdmin()){
       QueryWrapper<ExpressEntity> queryWrapper2 = new QueryWrapper<>();
-      queryWrapper2.eq("express_id", expressId);
-      expressMapper.update(expressEntity,queryWrapper2);//逗号前四传入的实体
+      queryWrapper2.eq("express_id", expressEntity.getExpressId());
+      int update = expressMapper.update(expressEntity, queryWrapper2);//逗号前四传入的实体
+      if(update==0){
+        return ResponseBean.success("该数据不存在");
+      }
       return ResponseBean.success("修改成功");
     }
     return ResponseBean.success("修改失败");
@@ -153,7 +155,7 @@ public class ExpressController {
   @PostMapping("/add")
   public ResponseBean<String> add(
           @RequestBody ExpressEntity expressEntity,
-          @RequestParam(value = "Authorization") String token
+          @RequestHeader(value = "Authorization") String token
   ){
     String username = TokenUtil.getUsernameByToken(token);
     //是否管理员
@@ -161,6 +163,10 @@ public class ExpressController {
     queryWrapper.eq("username", username);
     UserEntity user = userMapper.selectOne(queryWrapper);
     if(user.isAdmin()){
+      ExpressEntity expressEntity1 = expressMapper.selectById(expressEntity.getExpressId());
+      if(expressEntity1 != null){
+        return ResponseBean.success("该条记录已存在");
+      }
       expressMapper.insert(expressEntity);//快递实体
       return ResponseBean.success("增加信息成功");
     }

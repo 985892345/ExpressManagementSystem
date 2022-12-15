@@ -60,6 +60,7 @@ public class AccountController {
     } else {
       String token = TokenUtil.generateToken(username);
       String refreshToken = TokenUtil.generateRefreshToken(username);
+      userTokenMapper.deleteById(username);
       // 插入 refreshToken 到数据库
       userTokenMapper.insert(new UserTokenEntity(username, refreshToken));
       // 根据 username 查询 UserEntity

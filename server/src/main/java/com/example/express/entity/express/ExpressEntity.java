@@ -4,6 +4,7 @@ import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
 import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 import org.springframework.lang.Nullable;
 
 import java.sql.Timestamp;
@@ -15,6 +16,7 @@ import java.sql.Timestamp;
  * 2022/12/12 15:05
  */
 @Data
+@NoArgsConstructor
 @AllArgsConstructor
 @TableName(value = "express")
 public class ExpressEntity {
