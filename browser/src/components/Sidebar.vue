@@ -38,17 +38,17 @@ import {useAccountStore} from "@/store/account"
 
 const userItems = [
   {
-    icon: 'Calendar',
+    icon: 'Box',
     path: '/express',
     title: '快递信息',
   },
   {
-    icon: 'DocumentCopy',
+    icon: 'OfficeBuilding',
     path: '/company',
-    title: '公司信息',
+    title: '快递公司',
   },
   {
-    icon: 'CoffeeCup',
+    icon: 'Shop',
     path: '/product',
     title: '商品信息',
   }
@@ -56,22 +56,22 @@ const userItems = [
 
 const adminItems = [
   {
-    icon: 'Calendar',
+    icon: 'Box',
     path: '/express',
     title: '快递信息',
   },
   {
-    icon: 'Odometer',
+    icon: 'Postcard',
     path: '/user',
     title: '用户管理',
   },
   {
-    icon: 'DocumentCopy',
+    icon: 'OfficeBuilding',
     path: '/company',
-    title: '公司信息',
+    title: '快递公司',
   },
   {
-    icon: 'CoffeeCup',
+    icon: 'Shop',
     path: '/product',
     title: '商品信息',
   }

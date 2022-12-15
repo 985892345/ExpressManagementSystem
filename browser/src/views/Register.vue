@@ -76,6 +76,8 @@ import {reactive, ref} from "vue";
 import {register} from "@/api";
 import {ElMessage} from "element-plus";
 
+const code = ref()
+
 const router = useRouter();
 const param = reactive({
   username: '',
@@ -117,7 +119,7 @@ const checkPhone = (rule, value, callback) => {
   }
 }
 const checkCode = (rule, value, callback) => {
-  if (value !== '1234') {
+  if (value !== code.value) {
     callback(new Error('验证码错误'))
   } else {
     callback()
@@ -134,7 +136,7 @@ const loginForm = ref()
 
 const submitForm = () => {
   loginForm.value.validate(() => {
-    register(param.username, param.password).then(res => {
+    register(param.username, param.password, param.phone).then(res => {
       if (res.data.code === 10000) {
         ElMessage.success("注册成功")
         router.push('/login')
@@ -152,6 +154,7 @@ const sendCode = () => {
     ElMessage.error("电话号码错误！")
   } else {
     ElMessage.success("已发送验证码")
+    code.value = "1234"
   }
 }
 </script>

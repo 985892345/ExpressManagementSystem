@@ -31,21 +31,20 @@ const sidebarStore = useSidebarStore()
 const tagsStore = useTagsStore()
 const accountStore = useAccountStore()
 
-if (accountStore.user.userId === 0) {
-  getSelf().then(res => {
-    if (res.data.code === 10000) {
-      accountStore.user = res.data.data
-    } else {
-      accountStore.reset()
-      ElMessage.error("登录过期")
-      router.push("/login")
-    }
-  }).catch(err => {
+getSelf().then(res => {
+  if (res.data.code === 10000) {
+    accountStore.user = res.data.data
+  } else {
     accountStore.reset()
     ElMessage.error("登录过期")
     router.push("/login")
-  })
-}
+  }
+}).catch(err => {
+  console.log("getSelf   then")
+  accountStore.reset()
+  ElMessage.error("登录过期")
+  router.push("/login")
+})
 </script>
 
 <style scoped>

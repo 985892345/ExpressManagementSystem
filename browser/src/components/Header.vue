@@ -1,7 +1,7 @@
 <template>
   <div class="header">
     <!-- 折叠按钮 -->
-    <div class="collapse-btn" @click="collapseChage">
+    <div class="collapse-btn" @click="collapseChange">
       <el-icon v-if="sidebarStore.collapse">
         <Expand/>
       </el-icon>
@@ -24,7 +24,6 @@
 					</span>
           <template #dropdown>
             <el-dropdown-menu>
-              <el-dropdown-item command="user">个人中心</el-dropdown-item>
               <el-dropdown-item divided command="logout">退出登录</el-dropdown-item>
             </el-dropdown-menu>
           </template>
@@ -43,7 +42,7 @@ const accountStore = useAccountStore()
 
 const sidebarStore = useSidebarStore()
 // 侧边栏折叠
-const collapseChage = () => {
+const collapseChange = () => {
   sidebarStore.handleCollapse()
 };
 
@@ -53,8 +52,6 @@ const handleCommand = (command) => {
   if (command === 'logout') {
     accountStore.reset()
     router.push('/login')
-  } else if (command === 'user') {
-    router.push('/user')
   }
 };
 </script>
