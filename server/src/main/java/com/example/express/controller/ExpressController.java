@@ -22,7 +22,6 @@ import java.util.List;
 @RestController
 @RequestMapping(value = "/express")
 public class ExpressController {
-  
   private final ExpressMapper expressMapper;
   private final UserMapper userMapper;
   
@@ -40,7 +39,7 @@ public class ExpressController {
   ) {
     // 这里正常情况需要检查 token，是否是管理员，但检查操作交给了拦截器
     //检查是否为管理员
-    UserEntity user = new CheckAdminUtil(token,userMapper).check();
+    UserEntity user = CheckAdminUtil.check(token,userMapper);
     //如果是管理员
     Page<ExpressEntity> page = new Page<>(current,size);
     if(user.isAdmin()){
@@ -60,7 +59,7 @@ public class ExpressController {
     @RequestParam int expressId,
     @RequestHeader(value = "Authorization") String token
   ) {
-    UserEntity user = new CheckAdminUtil(token,userMapper).check();//为检查是否管理员做准备
+    UserEntity user = CheckAdminUtil.check(token,userMapper);//为检查是否管理员做准备
     if (user.isAdmin()){
       return ResponseBean.success(expressMapper.selectById(expressId));
     }
@@ -86,7 +85,7 @@ public class ExpressController {
           @RequestParam int userId,
           @RequestHeader(value = "Authorization") String token
   ){
-    UserEntity user = new CheckAdminUtil(token,userMapper).check();//为检查是否管理员做准备
+    UserEntity user = CheckAdminUtil.check(token,userMapper);//为检查是否管理员做准备
     if(user.isAdmin()){
       QueryWrapper<ExpressEntity> queryWrapper2 = new QueryWrapper<>();
       queryWrapper2.eq("receive_id", userId);//得到与收件人id匹配的快递
@@ -103,7 +102,7 @@ public class ExpressController {
           @RequestParam int expressId,
           @RequestHeader(value = "Authorization") String token
   ){
-    UserEntity user = new CheckAdminUtil(token,userMapper).check();//为检查是否管理员做准备
+    UserEntity user = CheckAdminUtil.check(token,userMapper);//为检查是否管理员做准备
     if(user.isAdmin()){
       QueryWrapper<ExpressEntity> queryWrapper2 = new QueryWrapper<>();
       queryWrapper2.eq("express_id", expressId);
@@ -120,7 +119,7 @@ public class ExpressController {
           @RequestBody ExpressEntity expressEntity,
           @RequestHeader(value = "Authorization") String token
   ){
-    UserEntity user = new CheckAdminUtil(token,userMapper).check();//为检查是否管理员做准备
+    UserEntity user = CheckAdminUtil.check(token,userMapper);//为检查是否管理员做准备
     if(user.isAdmin()){
       QueryWrapper<ExpressEntity> queryWrapper2 = new QueryWrapper<>();
       queryWrapper2.eq("express_id", expressEntity.getExpressId());
@@ -139,7 +138,7 @@ public class ExpressController {
           @RequestBody ExpressEntity expressEntity,
           @RequestHeader(value = "Authorization") String token
   ){
-    UserEntity user = new CheckAdminUtil(token,userMapper).check();//为检查是否管理员做准备
+    UserEntity user = CheckAdminUtil.check(token,userMapper);//为检查是否管理员做准备
     if(user.isAdmin()){
       ExpressEntity expressEntity1 = expressMapper.selectById(expressEntity.getExpressId());
       if(expressEntity1 != null){

@@ -11,10 +11,7 @@ import com.example.express.mapper.user.UserMapper;
 import com.example.express.mapper.user.UserSecretMapper;
 import com.example.express.mapper.user.UserTokenMapper;
 import com.example.express.utils.TokenUtil;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.nio.charset.StandardCharsets;
 import java.security.MessageDigest;
