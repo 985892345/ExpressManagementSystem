@@ -77,9 +77,9 @@ export const getUser = (current, size) => {
 }
 
 // 改变用户数据
-export const changeUser = (userId, address, phone, sex, isAdmin) => {
+export const updateUser = (userId, address, phone, sex, isAdmin) => {
   return request({
-    url: '/user/change',
+    url: '/user/update',
     method: 'post',
     data: stringify({
       userId: userId,
@@ -91,3 +91,67 @@ export const changeUser = (userId, address, phone, sex, isAdmin) => {
   })
 }
 
+// 查找用户
+export const findUser = (userId) => {
+  return request({
+    url: '/user/find',
+    method: 'get',
+    params: {
+      userId: userId
+    }
+  })
+}
+
+// 删除快递
+export const deleteExpress = (expressId) => {
+  return request({
+    url: '/express/delete',
+    method: "get",
+    params: {
+      expressId: expressId
+    }
+  })
+}
+
+// 更新快递
+export const updateExpress = (express) => {
+  return request({
+    url: '/express/update',
+    method: 'post',
+    data: express
+  })
+}
+
+// 得到所有快递
+export const getAllExpress = (current, size) => {
+  return request({
+    url: '/express/all',
+    method: 'get',
+    params: {
+      current: current,
+      size: size
+    }
+  })
+}
+
+// 查询快递
+export const findExpress = (expressId) => {
+  return request({
+    url: '/express/find',
+    method: 'get',
+    params: {
+      expressId: expressId
+    }
+  })
+}
+
+// 添加快递
+export const addExpress = (express) => {
+  return request({
+    url: '/express/find',
+    method: 'get',
+    params: {
+      express: express
+    }
+  })
+}

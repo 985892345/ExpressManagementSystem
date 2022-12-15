@@ -42,8 +42,8 @@ public class UserController {
     }
   }
   
-  @PostMapping("/change")
-  public ResponseBean<String> change(
+  @PostMapping("/update")
+  public ResponseBean<String> update(
     @RequestParam int userId,
     @RequestParam String address,
     @RequestParam long phone,
@@ -59,6 +59,18 @@ public class UserController {
       user.setAdmin(isAdmin);
       userMapper.updateById(user);
       return ResponseBean.success("更新成功");
+    } else {
+      return ResponseBean.error(10010, "非管理员");
+    }
+  }
+  
+  @GetMapping("/find")
+  public ResponseBean<UserEntity> find(
+    @RequestParam int userId,
+    @RequestHeader(value = "Authorization") String token
+  ) {
+    if (isAdmin(token)) {
+      return ResponseBean.success(userMapper.selectById(userId));
     } else {
       return ResponseBean.error(10010, "非管理员");
     }

@@ -10,12 +10,22 @@
       unique-opened
       router
     >
-      <el-menu-item v-for='item in items' :index="item.path" :key="item.path">
-        <el-icon>
-          <component :is="item.icon"></component>
-        </el-icon>
-        <template #title>{{ item.title }}</template>
-      </el-menu-item>
+      <template v-if="accountStore.user.admin">
+        <el-menu-item v-for='item in adminItems' :index="item.path" :key="item.path">
+          <el-icon>
+            <component :is="item.icon"></component>
+          </el-icon>
+          <template #title>{{ item.title }}</template>
+        </el-menu-item>
+      </template>
+      <template v-else>
+        <el-menu-item v-for='item in userItems' :index="item.path" :key="item.path">
+          <el-icon>
+            <component :is="item.icon"></component>
+          </el-icon>
+          <template #title>{{ item.title }}</template>
+        </el-menu-item>
+      </template>
     </el-menu>
   </div>
 </template>
@@ -25,8 +35,6 @@ import {computed, ref} from 'vue'
 import {useSidebarStore} from '@/store/sidebar'
 import {useRoute} from 'vue-router'
 import {useAccountStore} from "@/store/account"
-
-const items = ref()
 
 const userItems = [
   {
@@ -77,11 +85,6 @@ const onRoutes = computed(() => {
 const sidebarStore = useSidebarStore()
 const accountStore = useAccountStore()
 
-if (accountStore.user.admin) {
-  items.value = adminItems
-} else {
-  items.value = userItems
-}
 </script>
 
 <style scoped>

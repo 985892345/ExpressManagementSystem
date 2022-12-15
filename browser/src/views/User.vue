@@ -8,6 +8,10 @@
       </el-breadcrumb>
     </div>
     <div class="container">
+      <div class="handle-box" style="padding-bottom: 10px">
+        <el-input v-model="searchUserId" placeholder="查找用户id(精确查询)" style="width: 200px; margin-right: 20px"></el-input>
+        <el-button type="primary" icon="Search" @click="handleSearch">查找</el-button>
+      </div>
       <el-table :data="tableData" border class="table" ref="multipleTable" header-cell-class-name="table-header">
         <el-table-column prop="userId" label="用户id"></el-table-column>
         <el-table-column prop="username" label="用户名"></el-table-column>
@@ -18,7 +22,7 @@
         <el-table-column label="操作" width="220" align="center">
           <template #default="scope">
             <el-button text :icon="Edit" @click="handleEdit(scope.$index, scope.row)">
-              修改用户信息
+              修改
             </el-button>
           </template>
         </el-table-column>
@@ -70,8 +74,10 @@
 <script setup>
 import {reactive, ref} from "vue";
 import {Edit} from "@element-plus/icons-vue";
-import {changeUser, getUser} from "@/api";
+import {updateUser, getUser, findUser} from "@/api";
 import {ElMessage} from "element-plus";
+
+const searchUserId = ref()
 
 const tableData = ref([]);
 const query = reactive({
@@ -83,8 +89,10 @@ const query = reactive({
 const pageTotal = ref(0);
 // 分页导航
 const handlePageChange = (val) => {
-  query.current = val;
-  getData();
+  if (!searchUserId.value) {
+    query.current = val;
+    getData();
+  }
 };
 
 // 获取表格数据
@@ -93,7 +101,6 @@ const getData = () => {
     if (res.data.code === 10000) {
       tableData.value = res.data.data.records
       pageTotal.value = res.data.data.total
-
     } else {
       ElMessage.error(res.data.info);
     }
@@ -104,6 +111,25 @@ const getData = () => {
 }
 
 getData();
+
+const handleSearch = () => {
+  if (searchUserId.value) {
+    findUser(searchUserId.value).then(res => {
+      if (res.data.code === 10000) {
+        query.current = 1
+        tableData.value = [res.data.data]
+        pageTotal.value = 1
+      } else {
+        ElMessage.error("获取用户信息失败：" + res.data.info);
+      }
+    }).catch(err => {
+      console.error(err)
+      ElMessage.error("获取用户信息失败：" + err.message);
+    })
+  } else {
+    getData()
+  }
+}
 
 // 表格编辑时弹窗和保存
 const editVisible = ref(false)
@@ -128,7 +154,7 @@ const saveEdit = () => {
   if (form.phone !== '' && form.phone.length !== 11) {
     ElMessage.warning("电话号码不正确!")
   } else {
-    changeUser(form.userId, form.address, form.phone,form.sex, form.admin).then(res => {
+    updateUser(form.userId, form.address, form.phone,form.sex, form.admin).then(res => {
       if (res.data.code === 10000) {
         ElMessage.success(`修改第 ${idx + 1} 行成功`);
         if (form.address !== "") {
@@ -157,4 +183,3 @@ const saveEdit = () => {
 <style scoped>
 
 </style>
-
