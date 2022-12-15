@@ -65,7 +65,8 @@ public class ExpressController {
     }
     //不是管理员
     QueryWrapper<ExpressEntity> queryWrapper2 = new QueryWrapper<>();
-    queryWrapper2.eq("receive_id", user.getUserId());
+    queryWrapper2.eq("receive_id", user.getUserId())
+            .or().eq("send_id",user.getUserId());
     //queryWrapper2.eq("express_id", expressId);
     ExpressEntity expressEntity = expressMapper.selectById(expressId);
     //得到用户的全部快递
