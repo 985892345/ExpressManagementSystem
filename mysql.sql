@@ -85,7 +85,7 @@ CREATE TABLE `express` (
   `origin` varchar(50) DEFAULT NULL,
   `dest` varchar(50) DEFAULT NULL,
   PRIMARY KEY (`express_id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=7 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -94,6 +94,7 @@ CREATE TABLE `express` (
 
 LOCK TABLES `express` WRITE;
 /*!40000 ALTER TABLE `express` DISABLE KEYS */;
+INSERT INTO `express` VALUES (5,2,4,1,4,1,'重庆','重庆','北京'),(6,6,120,1,4,1,'北京','重庆1','深圳');
 /*!40000 ALTER TABLE `express` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -112,7 +113,7 @@ CREATE TABLE `user` (
   `sex` varchar(5) DEFAULT NULL,
   `is_admin` tinyint(1) NOT NULL,
   PRIMARY KEY (`user_id`)
-) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -121,7 +122,7 @@ CREATE TABLE `user` (
 
 LOCK TABLES `user` WRITE;
 /*!40000 ALTER TABLE `user` DISABLE KEYS */;
-INSERT INTO `user` VALUES (1,'test2',NULL,NULL,NULL,1),(3,'test1',NULL,NULL,NULL,0);
+INSERT INTO `user` VALUES (1,'test2','44',12345678911,'',1),(3,'test1','ad',12144242422,'男',0),(4,'admin',NULL,11111111111,NULL,1),(5,'12345',NULL,11111111111,NULL,0);
 /*!40000 ALTER TABLE `user` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -145,7 +146,7 @@ CREATE TABLE `user_secret` (
 
 LOCK TABLES `user_secret` WRITE;
 /*!40000 ALTER TABLE `user_secret` DISABLE KEYS */;
-INSERT INTO `user_secret` VALUES ('test1','a665a45920422f9d417e4867efdc4fb8a04a1f3fff1fa07e998e86f7f7a27ae3'),('test2','a665a45920422f9d417e4867efdc4fb8a04a1f3fff1fa07e998e86f7f7a27ae3');
+INSERT INTO `user_secret` VALUES ('12345','8d969eef6ecad3c29a3a629280e686cf0c3f5d5a86aff3ca12020c923adc6c92'),('admin','8d969eef6ecad3c29a3a629280e686cf0c3f5d5a86aff3ca12020c923adc6c92'),('test1','a665a45920422f9d417e4867efdc4fb8a04a1f3fff1fa07e998e86f7f7a27ae3'),('test2','a665a45920422f9d417e4867efdc4fb8a04a1f3fff1fa07e998e86f7f7a27ae3');
 /*!40000 ALTER TABLE `user_secret` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -169,7 +170,7 @@ CREATE TABLE `user_token` (
 
 LOCK TABLES `user_token` WRITE;
 /*!40000 ALTER TABLE `user_token` DISABLE KEYS */;
-INSERT INTO `user_token` VALUES ('test2','eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJ0ZXN0MiIsImlhdCI6MTY3MTExMTY0MiwiZXhwIjoxNjcxOTc1NjQyfQ.SzfPSvsKbH2KIXK1WokUdGhu1WTaLQfMt7R6vctJ0HHrf8dSHGU0Yhb8pM3Uk7jEMOixKH_lAEoVrrguaTIfqQ');
+INSERT INTO `user_token` VALUES ('12345','eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiIxMjM0NSIsImlhdCI6MTY3MTExODIxMiwiZXhwIjoxNjcxOTgyMjEyfQ.oEjd5QJgu0qEyJBFNhLyTLKj0TvBxfoB1qKue8mVyZO318gF511SQxS2ZxAdLorWgqWApaBWo-PG3eGHVcZPxQ'),('admin','eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJhZG1pbiIsImlhdCI6MTY3MTg5MjY4OSwiZXhwIjoxNjcyNzU2Njg5fQ.vn4LZ87fnsD0xO9AUeTwXcdDnuRazOFNgZ1eOx-O0UI0NdDDueXh5FpZXTFpFx4fEEgR_Wgjj8vYfYXPDbV_aw'),('test2','eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJ0ZXN0MiIsImlhdCI6MTY3MTEyMDIxMywiZXhwIjoxNjcxOTg0MjEzfQ.XSJfb488TGA3vh6MYxAUF8NXxBDgJdLZfJJdqyF1ojuvTtpTdnPPg8w0AydNLy3yLedTyDa0KOStohbcpvcNnw');
 /*!40000 ALTER TABLE `user_token` ENABLE KEYS */;
 UNLOCK TABLES;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
@@ -182,4 +183,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2022-12-15 22:21:14
+-- Dump completed on 2022-12-24 22:54:48

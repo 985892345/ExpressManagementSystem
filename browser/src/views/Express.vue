@@ -27,13 +27,9 @@
             <el-button text :icon="Edit" @click="handleEdit(scope.$index, scope.row)">
               修改
             </el-button>
-            <el-popconfirm title="确认要删除吗？">
-              <template #reference>
-                <el-button text :icon="Delete" @click="handleDelete(scope.row.expressId)">
-                  删除
-                </el-button>
-              </template>
-            </el-popconfirm>
+            <el-button text :icon="Delete" @click="handleDelete(scope.row.expressId)">
+              删除
+            </el-button>
           </template>
         </el-table-column>
       </el-table>

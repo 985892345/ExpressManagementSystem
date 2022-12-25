@@ -17,7 +17,16 @@ import java.nio.charset.StandardCharsets;
 import java.security.MessageDigest;
 
 /**
- * .
+ * 账户信息模块
+ *
+ * 主要负责：
+ * 1、注册
+ * 2、登录
+ * 3、登出
+ * 4、鉴权
+ * 5、得到自身信息
+ *
+ * 其中鉴权采用互联网流行的 OAuth2.0 方案，使用 token 和 refreshToken 进行用户身份判断
  *
  * @author 985892345
  * 2022/12/12 20:03

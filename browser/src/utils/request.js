@@ -1,9 +1,9 @@
 import axios from "axios";
 import {BASE_URL} from "@/config";
 import {ElMessage} from "element-plus";
-import router from "@/router";
 import {refreshToken} from "@/api";
 import {getToken, setToken} from "@/utils/token";
+import {useRouter} from "vue-router";
 
 const request = axios.create({
   baseURL: BASE_URL,
@@ -16,9 +16,17 @@ let requests = []
 
 request.interceptors.request.use(
   config => {
-    console.log("url = " + config.url);
-    if (!config.url.startsWith("/account")) {
-      config.headers['Authorization'] = 'Bearer ' + getToken()
+    if (isRefreshing) {
+      return new Response(res => {
+        requests.push(() => {
+          res(request(config))
+        })
+      })
+    } else {
+      console.log("url = " + config.url);
+      if (!config.url.startsWith("/account")) {
+        config.headers['Authorization'] = 'Bearer ' + getToken()
+      }
     }
     return config
   },
@@ -31,15 +39,17 @@ request.interceptors.request.use(
 
 request.interceptors.response.use(
   response => {
+    const router = useRouter()
     const responseData = response.data
     if (responseData.code === 20000) {
       if (!isRefreshing) {
         isRefreshing = true
-        // 尝试刷新 accountStore
+        // 尝试刷新 refreshToken
         return refreshToken().then(res => {
           if (res.data.code === 10000) {
             setToken(res.data.auth.token)
             requests.forEach(cb => cb())
+            requests = []
             return request(response.config)
           } else {
             router.push('/login')
